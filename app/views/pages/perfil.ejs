@@ -3,67 +3,189 @@
 
 <head>
     <meta charset="UTF-8">
-    <!--metatag viewport para o Responsivo -->
+    <!-- metatag viewport para o Responsivo -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel IceTown</title>
+
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/estilo.css">
 </head>
 
 <body>
 
-    <div id=container>
-
+    <div id="container">
 
         <style>
             header {
                 height: 15vmin;
                 min-height: 15vmin;
             }
+
+            .campo-erro {
+        border: 2px solid red !important;
+     }
+
+    .mensagem-erro {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .sucesso {
+        color: green;
+        margin-bottom: 15px;
+    }
+    
         </style>
+
         <!-- include header -->
-<%- include("../partials/header-publica") -%>
+        <%- include("../partials/header-publica") -%>
+
         <main>
+
             <div id="perfil">
-                <form action="perfil" method="post" enctype="multipart/form-data">
+
+                <form action="/perfil" method="post">
+
                     <h1>Meu Perfil</h1>
+                
+                    <% if (typeof erros !== "undefined" && erros.length > 0) { %>
+                        <div class="erros">
+                            <% erros.forEach(erro => { %>
+                                <p><%= erro.msg %></p>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                
+                    <% if (typeof sucesso !== "undefined") { %>
+                        <div class="sucesso">
+                            <p><%= sucesso %></p>
+                        </div>
+                    <% } %>
+
                     <p>
-                        <input type="text" name="nome" id="nome" placeholder="Nome">
+                        <input
+                            type="text"
+                            name="nome"
+                            id="nome"
+                            placeholder="Nome"
+                            value="<%= dados?.nome || '' %>"
+                            class="<%= erros?.some(e => e.path === 'nome') ? 'campo-erro' : '' %>"
+                        >
                         <b>*</b>
+                    
+                        <% if (erros?.some(e => e.path === 'nome')) { %>
+                            <span class="mensagem-erro">
+                                <%= erros.find(e => e.path === 'nome').msg %>
+                            </span>
+                        <% } %>
                     </p>
+                    
                     <p>
-                        <input type="text" name="email" id="email" placeholder="E-mail">
+                        <input
+                            type="text"
+                            name="email"
+                            id="email"
+                            placeholder="E-mail"
+                            value="<%= dados?.email || '' %>"
+                            class="<%= erros?.some(e => e.path === 'email') ? 'campo-erro' : '' %>"
+                        >
                         <b>*</b>
+                    
+                        <% if (erros?.some(e => e.path === 'email')) { %>
+                            <span class="mensagem-erro">
+                                <%= erros.find(e => e.path === 'email').msg %>
+                            </span>
+                        <% } %>
                     </p>
+                    
                     <p>
-                        <input type="text" name="nome-usuario" id="nome-usuario" placeholder="Nome de Usuario">
+                        <input
+                            type="text"
+                            name="nome-usuario"
+                            id="nome-usuario"
+                            placeholder="Nome de Usuario"
+                            value="<%= dados?.['nome-usuario'] || '' %>"
+                            class="<%= erros?.some(e => e.path === 'nome-usuario') ? 'campo-erro' : '' %>"
+                        >
                         <b>*</b>
+                    
+                        <% if (erros?.some(e => e.path === 'nome-usuario')) { %>
+                            <span class="mensagem-erro">
+                                <%= erros.find(e => e.path === 'nome-usuario').msg %>
+                            </span>
+                        <% } %>
                     </p>
+                    
                     <p>
-                        <input type="text" name="cpf" id="cpf" placeholder="CPF">
+                        <input
+                            type="text"
+                            name="cpf"
+                            id="cpf"
+                            placeholder="CPF"
+                            value="<%= dados?.cpf || '' %>"
+                            class="<%= erros?.some(e => e.path === 'cpf') ? 'campo-erro' : '' %>"
+                        >
                         <b>*</b>
+                    
+                        <% if (erros?.some(e => e.path === 'cpf')) { %>
+                            <span class="mensagem-erro">
+                                <%= erros.find(e => e.path === 'cpf').msg %>
+                            </span>
+                        <% } %>
                     </p>
+                    
                     <p>
-                        <input type="file" name="imagem-perfil" id="imagem-perfil" onchange="loadImg()">
+                        <input
+                            type="file"
+                            name="imagem-perfil"
+                            id="imagem-perfil"
+                            onchange="loadImg()"
+                        >
                         <img id="img-preview">
                     </p>
+                    
                     <p>
-                        <input type="password" name="senha" id="senha" placeholder="senha de Usuario">
-                        <span class="aviso">Não preencha este campo para manter a senha atual</span>
+                        <input
+                            type="password"
+                            name="senha"
+                            id="senha"
+                            placeholder="senha de Usuario"
+                            class="<%= erros?.some(e => e.path === 'senha') ? 'campo-erro' : '' %>"
+                        >
+                    
+                        <span class="aviso">
+                            Não preencha este campo para manter a senha atual
+                        </span>
+                    
+                        <% if (erros?.some(e => e.path === 'senha')) { %>
+                            <span class="mensagem-erro">
+                                <%= erros.find(e => e.path === 'senha').msg %>
+                            </span>
+                        <% } %>
                     </p>
+                    
+                        <span class="aviso">
+                            Não preencha este campo para manter a senha atual
+                        </span>
+                    </p>
+                    
                     <p>
-                        <input type="submit" value="Alterar dados perfil" />
+                        <input type="submit" value="Alterar dados perfil">
                     </p>
+
                 </form>
+
                 <h1>Minhas Reservas</h1>
+
                 <p>Você ainda não possui reservas!</p>
 
             </div>
 
-
         </main>
 
         <%- include("../partials/footer-publica") -%>
+
     </div>
 
 </body>
